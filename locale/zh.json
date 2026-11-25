@@ -1,1 +1,1 @@
-{"copyCommand": "复制升级命令", "installed": "已安装", "latest": "最新", "meta": {"description": "检查 npm 是否有新版 DSH，一键升级。", "detail": "docs/DETAIL.md", "title": "更新检查"}, "openPanel": "打开更新面板", "panel": "更新", "title": "更新"}
+{"copyCommand": "复制升级命令", "installed": "已安装", "latest": "最新", "meta": {"description": "检查 npm 上是否有新版 DSH，并在侧边栏直接升级。", "detail": "docs/DETAIL.md", "title": "更新检查"}, "openPanel": "打开更新面板", "panel": "更新", "title": "更新"}

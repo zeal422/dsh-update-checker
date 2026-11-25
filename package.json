@@ -30,7 +30,7 @@
     "lint": "eslint .",
     "release": "semantic-release",
     "test": "node dev/render-check.mjs",
-    "check": "npm run lint && npm test"
+    "check": "npm run lint && node dev/docs-check.mjs && npm test"
   },
   "exports": {
     ".": "./index.js",

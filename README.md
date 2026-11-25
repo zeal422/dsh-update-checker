@@ -4,11 +4,11 @@ A sidebar panel for DeepSeek Harness that tells you when a newer release is on n
 
 ## What it adds
 
-An **Updates** row in the sidebar. It opens a panel showing the installed version, the latest version on npm, a Check again button, and an Upgrade button that only appears when something newer exists.
+An **Updates** row in the sidebar. It opens a panel showing the installed version, the latest version on npm, a Check again button, and an Upgrade button that only appears when something newer exists. Upgrading takes two clicks, one to arm and one to confirm.
 
 A status line in the sidebar footer, on the same row as the account menu. It reads Up to date normally, or Update ready with an amber dot when a release is waiting.
 
-Two agent tools, so you can also ask the agent instead of clicking: `dsh_check_update` and `dsh_upgrade_dsh`.
+Agent tools, so you can also ask the agent instead of clicking: `dsh_check_update` and `dsh_upgrade_dsh`.
 
 ## Install
 
@@ -22,7 +22,7 @@ Pin a full commit if you want Plugin Manager to offer updates later. A branch or
 
 For local development, point Add plugin at the folder itself.
 
-No restart is needed after install. The bundle activates through hot reload.
+No harness restart is needed after install. Reload the page to load the new bundle.
 
 ## Screenshots
 
@@ -56,7 +56,7 @@ npm install
 npm run check
 ```
 
-`check` runs ESLint and then the render check. The render check loads the client bundle and renders every registered component against a stub host, so a missing variable fails there instead of leaving you with a blank panel.
+`check` runs ESLint, the docs check, and then the render check. The render check loads the client bundle and renders every registered component against a stub host, so a missing variable fails there instead of leaving you with a blank panel. The docs check fails when a documented tool name or route no longer exists in the code, or when the bundle id drifts from the package name.
 
 Run `npm run hooks` once per clone. It points git at `.githooks`, which checks commit messages, runs `npm run check` before committing, and refuses pushes unless `ALLOW_PUSH=1` is set. The maintainer pushes, not an agent.
 

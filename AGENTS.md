@@ -20,9 +20,20 @@ The tool does not judge your prefix. If you label a breaking change as `chore:`,
 
 ## Before committing
 
-Run `npm run check`. It lints both halves and renders every registered component against a stub host, so a missing variable fails here instead of leaving a blank panel.
+Run `npm run check`. It runs ESLint, a docs check, and then renders every registered component against a stub host, so a missing variable fails here instead of leaving a blank panel.
+
+The docs check compares the docs against the code: agent tool names, web route paths, the bundle id, and the `files` list. When it fails, fix whichever side is wrong, not the check.
 
 Commit only when the user asks.
+
+## Docs that must stay true
+
+`dev/docs-check.mjs` covers tool names and routes. These are on you:
+
+- The install line in the README must match the real repository URL.
+- `SECURITY.md` describes what the routes actually do. If a route starts taking input, say so there.
+- `docs/DETAIL.md` is shown in Plugin Manager. No relative links, they render as plain text.
+- Button labels quoted in docs are a liability. Describe the action, or check the string in `client.js` before quoting it.
 
 ## Commit messages
 
@@ -38,7 +49,7 @@ feat: add update checker panel
 
 Prefixes: feat, fix, docs, chore, refactor, test, perf, build, ci.
 
-One logical change per commit. No emoji. The `commit-msg` hook enforces this.
+One logical change per commit. No emoji. The `commit-msg` hook enforces this, and `dev/commit-msg.mjs` is the source of truth if this list ever disagrees with the hook.
 
 ## Things that break quietly
 
