@@ -1,0 +1,57 @@
+{
+  "name": "@local/dsh-update-checker",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sidebar update checker for DeepSeek Harness: shows the newest npm release and upgrades with one click.",
+  "type": "module",
+  "license": "MIT",
+  "author": "zeal422",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "updates",
+    "updater"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zeal422/dsh-update-checker.git"
+  },
+  "homepage": "https://github.com/zeal422/dsh-update-checker#readme",
+  "bugs": {
+    "url": "https://github.com/zeal422/dsh-update-checker/issues"
+  },
+  "engines": {
+    "dsh": ">=0.2.2-rc.5"
+  },
+  "scripts": {
+    "test": "node dev/render-check.mjs"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./icon": "./icon.svg",
+    "./locale/*.json": "./locale/*.json"
+  },
+  "files": [
+    "cordis.patch.yml",
+    "client.js",
+    "docs",
+    "icon.svg",
+    "index.js",
+    "locale/*.json"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-sidebar",
+        "@deepseek-ai/dsh-client-locale"
+      ],
+      "platform": "web"
+    }
+  }
+}

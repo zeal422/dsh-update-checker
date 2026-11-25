@@ -1,0 +1,4 @@
+- insert:
+    - id: dsh-update-checker
+      name: '@local/dsh-update-checker'
+      config: {}
