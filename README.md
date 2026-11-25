@@ -52,10 +52,24 @@ One CSS rule narrows the signed-out account row so its hover bar stops before th
 ## Development
 
 ```
-node dev/render-check.mjs
+npm install
+npm run check
 ```
 
-That script loads the client bundle and renders every registered component against a stub host. A missing variable fails there instead of leaving you with a blank panel.
+`check` runs ESLint and then the render check. The render check loads the client bundle and renders every registered component against a stub host, so a missing variable fails there instead of leaving you with a blank panel.
+
+Run `npm run hooks` once per clone. It points git at `.githooks`, which checks commit messages, runs `npm run check` before committing, and refuses pushes unless `ALLOW_PUSH=1` is set. The maintainer pushes, not an agent.
+
+## Commit messages
+
+Conventional prefix plus a bullet body, enforced by the `commit-msg` hook and by CI on pull requests. See [AGENTS.md](AGENTS.md).
+
+```
+fix: keep the status pill inside the footer row
+
+- narrow the signed-out account launcher with a scoped rule
+- drop the overlay that hid the pill on hover
+```
 
 ## License
 
