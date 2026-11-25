@@ -6,7 +6,17 @@
 - Never amend or rewrite a commit that has been pushed or shared. A local, unpushed commit can be amended to fix its own message.
 - Never use `--no-verify` to skip the hooks.
 - Never add a dependency without asking first.
-- Never bump the version or edit CHANGELOG.md unless asked.
+- Never run `npm run release`, `npx semantic-release`, or `git tag`. Releases are owned by CI.
+- Never hand-edit the version in `package.json` or write a CHANGELOG entry. CI owns both.
+
+## Releases
+
+Pushing to `main` runs semantic-release. It reads the commits since the last tag, picks the version, writes the CHANGELOG entry, bumps `package.json`, commits `chore(release): x.y.z`, tags it, and publishes a GitHub release.
+
+- `fix:` bumps patch. `feat:` bumps minor. A `!` after the type, or a `BREAKING CHANGE:` footer, bumps major. Everything else rides along into the next release.
+- Nothing is released when a push contains only `chore:`, `docs:`, `test:`, `ci:`, `build:`, or `refactor:` commits.
+
+The tool does not judge your prefix. If you label a breaking change as `chore:`, it ships as no release at all, or worse, a patch. Label what a user would notice, not how much code you moved.
 
 ## Before committing
 

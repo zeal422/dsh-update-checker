@@ -28,6 +28,7 @@
   "scripts": {
     "hooks": "git config core.hooksPath .githooks",
     "lint": "eslint .",
+    "release": "semantic-release",
     "test": "node dev/render-check.mjs",
     "check": "npm run lint && npm test"
   },
@@ -59,6 +60,9 @@
     }
   },
   "devDependencies": {
-    "eslint": "^10.15.0"
+    "@semantic-release/changelog": "^7.0.0",
+    "@semantic-release/git": "^11.0.1",
+    "eslint": "^10.15.0",
+    "semantic-release": "^25.0.9"
   }
 }

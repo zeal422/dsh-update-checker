@@ -43,5 +43,5 @@ export default [
   { ignores: ['node_modules/**'] },
   { files: ['client.js'], languageOptions: languageOptions(browserGlobals), rules },
   { files: ['index.js'], languageOptions: languageOptions(nodeGlobals), rules },
-  { files: ['dev/**/*.mjs', 'eslint.config.js'], languageOptions: languageOptions(nodeGlobals), rules },
+  { files: ['dev/**/*.mjs', 'eslint.config.js', 'release.config.js'], languageOptions: languageOptions(nodeGlobals), rules },
 ];

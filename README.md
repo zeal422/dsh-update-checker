@@ -60,6 +60,19 @@ npm run check
 
 Run `npm run hooks` once per clone. It points git at `.githooks`, which checks commit messages, runs `npm run check` before committing, and refuses pushes unless `ALLOW_PUSH=1` is set. The maintainer pushes, not an agent.
 
+## Versioning
+
+Releases are automatic. Push to `main` and semantic-release works out the version from the commits, writes the CHANGELOG entry, bumps `package.json`, commits `chore(release): x.y.z`, tags it, and publishes a GitHub release.
+
+- `fix:` bumps patch
+- `feat:` bumps minor
+- `!` after the type, or a `BREAKING CHANGE:` footer, bumps major
+- `chore:`, `docs:`, `test:`, `ci:`, `build:`, `refactor:` release nothing on their own
+
+Several commits land in one release. A push containing only internal work releases nothing at all. Nobody edits the version by hand, and the changelog is generated rather than maintained.
+
+The catch is that the prefix is a claim. A breaking change labelled `chore:` ships as no release. Label what a user would notice.
+
 ## Commit messages
 
 Conventional prefix plus a bullet body, enforced by the `commit-msg` hook and by CI on pull requests. See [AGENTS.md](AGENTS.md).
