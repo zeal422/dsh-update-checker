@@ -3,7 +3,7 @@
 ## Never
 
 - Never run `git push`, `git remote add`, `git remote set-url`, or anything else that touches a remote. Pushing is the user's job.
-- Never amend or rewrite a commit that already exists on a branch.
+- Never amend or rewrite a commit that has been pushed or shared. A local, unpushed commit can be amended to fix its own message.
 - Never use `--no-verify` to skip the hooks.
 - Never add a dependency without asking first.
 - Never bump the version or edit CHANGELOG.md unless asked.
