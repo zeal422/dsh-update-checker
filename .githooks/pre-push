@@ -1,0 +1,7 @@
+#!/bin/sh
+if [ "$ALLOW_PUSH" != "1" ]; then
+  echo "push blocked: this repo is push-by-maintainer only." >&2
+  echo "the user pushes, not the agent. if you are the user, re-run with ALLOW_PUSH=1." >&2
+  exit 1
+fi
+exit 0

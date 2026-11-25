@@ -9,16 +9,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Syntax
-        run: |
-          node --check index.js
-          node --check client.js
-          node --check dev/render-check.mjs
-      - name: Manifests
-        run: |
-          node -e "for (const f of ['package.json','locale/en.json','locale/zh.json']) JSON.parse(require('node:fs').readFileSync(f,'utf8'))"
+          cache: npm
+      - name: Install
+        run: npm ci
+      - name: Lint
+        run: npm run lint
       - name: Render check
-        run: node dev/render-check.mjs
+        run: npm test
+      - name: Commit messages
+        if: github.event_name == 'pull_request'
+        run: node dev/commit-msg.mjs --range "origin/${{ github.base_ref }}..HEAD"

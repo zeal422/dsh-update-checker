@@ -1,0 +1,12 @@
+#!/bin/sh
+set -e
+cd "$(dirname "$0")/.."
+
+node dev/render-check.mjs
+
+if [ -x node_modules/.bin/eslint ]; then
+  node_modules/.bin/eslint .
+else
+  echo "pre-commit: eslint is not installed. Run: npm install" >&2
+  exit 1
+fi
