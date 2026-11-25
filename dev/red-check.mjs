@@ -56,6 +56,12 @@ const mutations = [
     apply: (text) => text.replace('github:zeal422/dsh-update-checker', 'github:someone-else/dsh-update-checker'),
     command: ['dev/docs-check.mjs'],
   },
+  {
+    name: 'a README image points at a missing file',
+    file: 'README.md',
+    apply: (text) => text.replace('docs/before-sidebar.png', 'docs/before-sidebar-missing.png'),
+    command: ['dev/docs-check.mjs'],
+  },
 ];
 
 const run = (args, cwd) => {

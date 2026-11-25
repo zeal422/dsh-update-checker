@@ -64,6 +64,11 @@ const skillPath = '.agents/skills/dsh-doc/SKILL.md';
 expect(fs.existsSync(path.join(root, skillPath)), `${skillPath} is missing; refresh the vendored skill`);
 expect(fs.readFileSync(path.join(root, skillPath), 'utf8').includes('name: dsh-doc'), `${skillPath} lost its frontmatter`);
 
+for (const match of docs['README.md'].matchAll(/!\[[^\]]*\]\(([^)]+)\)/g)) {
+  const target = match[1];
+  expect(fs.existsSync(path.join(root, target)), `README.md references a missing image: ${target}`);
+}
+
 if (failures.length > 0) {
   console.error('docs check failed:');
   for (const failure of failures) console.error(`  - ${failure}`);

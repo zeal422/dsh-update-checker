@@ -18,7 +18,7 @@ The harness changes. Slot names, service methods, and bundle requirements are no
 
 ## Red first
 
-A check you have not seen fail is not a check. `npm run red` copies the repo, breaks it eight ways, and requires the matching check to fail each time.
+A check you have not seen fail is not a check. `npm run red` copies the repo, breaks it nine ways, and requires the matching check to fail each time.
 
 When you add or change a check, add a mutation for it in `dev/red-check.mjs`. When you fix a bug, first make a check fail, then fix it. If nothing can fail, there is no test.
 

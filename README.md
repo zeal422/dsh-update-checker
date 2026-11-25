@@ -30,11 +30,15 @@ Before install, the sidebar has no Updates row:
 
 ![Sidebar before install](docs/before-sidebar.png)
 
-After install, the Updates row is above More, and the panel shows the versions and the upgrade command:
+After install, the panel shows the installed and latest versions, the check button, and the upgrade command:
 
 ![Updates panel after install](docs/after-panel.png)
 
-Both were captured on DSH 0.2.2-rc.5. Refresh them when the interface changes.
+The sidebar footer carries the status on the account row, next to More:
+
+![Status in the sidebar footer](docs/after-footer.png)
+
+All three were captured on DSH 0.2.2-rc.5. Refresh them when the interface changes.
 
 ## How the check works
 
