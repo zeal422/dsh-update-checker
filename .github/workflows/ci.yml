@@ -19,8 +19,10 @@ jobs:
         run: npm ci
       - name: Lint
         run: npm run lint
-      - name: Render check
-        run: npm test
+      - name: Check
+        run: npm run check
+      - name: Red check
+        run: npm run red
       - name: Commit messages
         if: github.event_name == 'pull_request'
         run: node dev/commit-msg.mjs --range "origin/${{ github.base_ref }}..HEAD"

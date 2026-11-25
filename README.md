@@ -56,7 +56,9 @@ npm install
 npm run check
 ```
 
-`check` runs ESLint, the docs check, and then the render check. The render check loads the client bundle and renders every registered component against a stub host, so a missing variable fails there instead of leaving you with a blank panel. The docs check fails when a documented tool name or route no longer exists in the code, or when the bundle id drifts from the package name.
+`check` runs ESLint, the docs check, unit tests, and then the render check. The render check loads the client bundle and renders every registered component against a stub host, so a missing variable fails there instead of leaving you with a blank panel. The docs check fails when a documented tool name or route no longer exists in the code, or when the bundle id drifts from the package name.
+
+`npm run red` proves those checks are worth having. It copies the repo, breaks it six ways, and requires a check to fail each time. A mutation that survives is a hole in the tests.
 
 Run `npm run hooks` once per clone. It points git at `.githooks`, which checks commit messages, runs `npm run check` before committing, and refuses pushes unless `ALLOW_PUSH=1` is set. The maintainer pushes, not an agent.
 
@@ -70,6 +72,8 @@ Releases are automatic. Push to `main` and semantic-release works out the versio
 - `chore:`, `docs:`, `test:`, `ci:`, `build:`, `refactor:` release nothing on their own
 
 Several commits land in one release. A push containing only internal work releases nothing at all. Nobody edits the version by hand, and the changelog is generated rather than maintained.
+
+The changelog is grouped by commit type, so a minor release lists its features and a patch release lists its fixes. The size of the number tells you the size of the change: a patch is a small repair, a minor adds behavior, a major breaks something that worked before.
 
 The catch is that the prefix is a claim. A breaking change labelled `chore:` ships as no release. Label what a user would notice.
 

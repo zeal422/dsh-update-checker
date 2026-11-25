@@ -28,9 +28,11 @@
   "scripts": {
     "hooks": "git config core.hooksPath .githooks",
     "lint": "eslint .",
+    "unit": "node --test dev/unit.test.mjs",
+    "red": "node dev/red-check.mjs",
     "release": "semantic-release",
     "test": "node dev/render-check.mjs",
-    "check": "npm run lint && node dev/docs-check.mjs && npm test"
+    "check": "npm run lint && node dev/docs-check.mjs && npm run unit && npm test"
   },
   "exports": {
     ".": "./index.js",

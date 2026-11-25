@@ -1,5 +1,22 @@
 # Working in this repo
 
+## Layout
+
+- `index.js` runs in the Host. Two web routes, two agent tools, version detection, semver comparison.
+- `client.js` runs in the browser. The sidebar panel, the sidebar row icon, and the footer status. Its only import is `react` from the page module table.
+- `cordis.patch.yml` is the row the bundle inserts. Its `name` must match the package name.
+- `dev/` holds the checks and never ships. `render-check` renders the components, `docs-check` compares docs to code, `unit.test` covers semver, `red-check` proves the other checks catch broken code, `commit-msg` validates messages.
+
+## No comments in code
+
+`index.js` and `client.js` carry no comments. They go stale and nothing checks them. Rationale belongs here or in the docs, and the code should read without narration.
+
+## Red first
+
+A check you have not seen fail is not a check. `npm run red` copies the repo, breaks it six ways, and requires the matching check to fail each time.
+
+When you add or change a check, add a mutation for it in `dev/red-check.mjs`. When you fix a bug, first make a check fail, then fix it. If nothing can fail, there is no test.
+
 ## Never
 
 - Never run `git push`, `git remote add`, `git remote set-url`, or anything else that touches a remote. Pushing is the user's job.

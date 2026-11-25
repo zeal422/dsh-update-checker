@@ -106,7 +106,6 @@ window.__ModuleLoader__.load({
         document.body.removeChild(el);
         done();
       } catch (err) {
-        // Clipboard unavailable; the command stays visible for manual copy.
       }
     }
 
@@ -138,11 +137,6 @@ window.__ModuleLoader__.load({
     }
     const noteStyle = { fontSize: 12, color: 'var(--dsw-alias-label-secondary)', margin: '12px 0 0' };
     const codeStyle = { flex: 1, fontSize: 13, fontFamily: 'monospace', wordBreak: 'break-all' };
-    // Our own control chrome plus one scoped shell rule: the signed-out account
-    // launcher (the "More" row) is declared width:100%, so its hover fill spans
-    // the whole row. Narrowing that one button makes the highlight hug its
-    // content and frees the row's right end for this plugin's status text.
-    // Scoped by the launcher's own data attributes; removed when we unmount.
     const SHELL_CSS = '.dshuc-btn{background:transparent;border:1px solid var(--dsw-alias-border-l2);'
       + 'transition:background-color 120ms ease,border-color 120ms ease,transform 60ms ease}'
       + '.dshuc-btn:hover:not(:disabled){background-color:var(--dsw-alias-interactive-bg-hover);'
@@ -456,7 +450,6 @@ window.__ModuleLoader__.load({
           : null,
       );
       if (!wide) {
-        // Collapsed rail: icon only, in normal flow.
         return h(
           'span',
           { style: { display: 'flex', justifyContent: 'center', width: '100%' } },
@@ -479,9 +472,6 @@ window.__ModuleLoader__.load({
           ),
         );
       }
-      // Wide column: zero-height row so the status shares the launcher's line.
-      // The launcher is narrowed by SHELL_CSS, so its hover fill hugs its own
-      // content and this text sits outside it at the row's right end.
       return h(
         'span',
         {

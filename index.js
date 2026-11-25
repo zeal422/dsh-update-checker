@@ -1,4 +1,3 @@
-/** Host half of the DSH update checker: npm status, one-click upgrade route, agent tools. */
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFile } from 'node:child_process';
@@ -15,7 +14,6 @@ const FETCH_TIMEOUT_MS = 8000;
 
 const requireFromHere = createRequire(import.meta.url);
 
-/** Last known registry answer; UI and tools stay fast between refreshes. */
 let latestCache = { at: 0, version: null, error: null };
 
 function readInstalledVersion(ctx) {
@@ -25,7 +23,6 @@ function readInstalledVersion(ctx) {
       return release.version;
     }
   } catch {
-    // Fall through to package.json probing.
   }
   const candidates = [];
   if (typeof process.env.DSH_INSTALL_DIR === 'string' && process.env.DSH_INSTALL_DIR.length > 0) {
@@ -34,7 +31,6 @@ function readInstalledVersion(ctx) {
   try {
     candidates.push(path.join(path.dirname(requireFromHere.resolve(`${PKG}/package.json`)), 'package.json'));
   } catch {
-    // Package not resolvable from here; rely on the candidates above.
   }
   for (const file of candidates) {
     try {
@@ -43,7 +39,6 @@ function readInstalledVersion(ctx) {
         return manifest.version;
       }
     } catch {
-      // Try the next candidate.
     }
   }
   return 'unknown';
@@ -57,8 +52,7 @@ function parseVersion(value) {
 
 function comparePreRelease(a, b) {
   if (a === b) return 0;
-  if (a === null) return 1; // A release outranks its own pre-releases.
-  if (b === null) return -1;
+  if (a === null) return 1;  if (b === null) return -1;
   const aParts = a.split('.');
   const bParts = b.split('.');
   const length = Math.max(aParts.length, bParts.length);
@@ -73,8 +67,7 @@ function comparePreRelease(a, b) {
     if (aNum !== null && bNum !== null) {
       if (aNum !== bNum) return aNum < bNum ? -1 : 1;
     } else if (aNum !== null) {
-      return -1; // Numeric identifiers sort below alphanumeric ones.
-    } else if (bNum !== null) {
+      return -1;    } else if (bNum !== null) {
       return 1;
     } else if (aPart !== bPart) {
       return aPart < bPart ? -1 : 1;
@@ -83,7 +76,6 @@ function comparePreRelease(a, b) {
   return 0;
 }
 
-/** Rough semver comparison; falls back to lexicographic order for odd tags. */
 function compareVersions(a, b) {
   const parsedA = parseVersion(a);
   const parsedB = parseVersion(b);
@@ -322,3 +314,5 @@ export function apply(ctx) {
     ctx.effect(() => registerUpgradeRoute(webServer, ctx), 'dsh-update-checker: upgrade route');
   }
 }
+
+export { compareVersions };
