@@ -23,6 +23,9 @@ jobs:
         run: npm run check
       - name: Red check
         run: npm run red
+      - name: Release guard
+        if: github.event_name == 'pull_request'
+        run: node dev/release-guard.mjs "origin/${{ github.base_ref }}"
       - name: Commit messages
         if: github.event_name == 'pull_request'
         run: node dev/commit-msg.mjs --range "origin/${{ github.base_ref }}..HEAD"

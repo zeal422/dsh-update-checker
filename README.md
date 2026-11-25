@@ -26,10 +26,15 @@ No harness restart is needed after install. Reload the page to load the new bund
 
 ## Screenshots
 
-<!-- Add both images to docs/ and uncomment.
-![The Updates panel](docs/screenshot-panel.png)
-![The sidebar footer](docs/screenshot-footer.png)
--->
+Before install, the sidebar has no Updates row:
+
+![Sidebar before install](docs/before-sidebar.png)
+
+After install, the Updates row is above More, and the panel shows the versions and the upgrade command:
+
+![Updates panel after install](docs/after-panel.png)
+
+Both were captured on DSH 0.2.2-rc.5. Refresh them when the interface changes.
 
 ## How the check works
 
@@ -60,7 +65,7 @@ npm run check
 
 `npm run red` proves those checks are worth having. It copies the repo, breaks it six ways, and requires a check to fail each time. A mutation that survives is a hole in the tests.
 
-Run `npm run hooks` once per clone. It points git at `.githooks`, which checks commit messages, runs `npm run check` before committing, and refuses pushes unless `ALLOW_PUSH=1` is set. The maintainer pushes, not an agent.
+Run `npm install` once. Its `prepare` step points git at `.githooks` automatically, so the commit message check, the pre-commit checks, and the push guard are active without another command.
 
 ## Versioning
 

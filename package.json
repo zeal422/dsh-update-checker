@@ -26,13 +26,15 @@
     "dsh": ">=0.2.2-rc.5"
   },
   "scripts": {
-    "hooks": "git config core.hooksPath .githooks",
+    "prepare": "node dev/install-hooks.mjs",
+    "hooks": "node dev/install-hooks.mjs",
     "lint": "eslint .",
+    "style": "node dev/style-check.mjs",
     "unit": "node --test dev/unit.test.mjs",
     "red": "node dev/red-check.mjs",
     "release": "semantic-release",
     "test": "node dev/render-check.mjs",
-    "check": "npm run lint && node dev/docs-check.mjs && npm run unit && npm test"
+    "check": "npm run lint && npm run style && node dev/docs-check.mjs && npm run unit && npm test"
   },
   "exports": {
     ".": "./index.js",

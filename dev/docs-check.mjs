@@ -52,6 +52,18 @@ for (const route of routes) {
   expect(security.includes(route), `SECURITY.md does not mention the route ${route}`);
 }
 
+const repoUrl = String(pkg.repository?.url ?? '');
+const repoMatch = repoUrl.match(/github\.com[/:]([^/]+)\/([^/.]+)/);
+expect(repoMatch !== null, 'package.json repository.url is not a GitHub URL');
+if (repoMatch !== null) {
+  const slug = `${repoMatch[1]}/${repoMatch[2]}`;
+  expect(docs['README.md'].includes(slug), `README.md does not mention the repository ${slug}`);
+}
+
+const skillPath = '.agents/skills/dsh-doc/SKILL.md';
+expect(fs.existsSync(path.join(root, skillPath)), `${skillPath} is missing; refresh the vendored skill`);
+expect(fs.readFileSync(path.join(root, skillPath), 'utf8').includes('name: dsh-doc'), `${skillPath} lost its frontmatter`);
+
 if (failures.length > 0) {
   console.error('docs check failed:');
   for (const failure of failures) console.error(`  - ${failure}`);

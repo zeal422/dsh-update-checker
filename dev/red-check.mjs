@@ -44,6 +44,18 @@ const mutations = [
     apply: (text) => text.replace('  return comparePreRelease(parsedA.pre, parsedB.pre);', '  return 0;'),
     command: ['--test', 'dev/unit.test.mjs'],
   },
+  {
+    name: 'a comment creeps back into a runtime file',
+    file: 'client.js',
+    apply: (text) => text.replace('    const PANEL_ID', '    // a stale note\n    const PANEL_ID'),
+    command: ['dev/style-check.mjs'],
+  },
+  {
+    name: 'the README names the wrong repository',
+    file: 'README.md',
+    apply: (text) => text.replace('github:zeal422/dsh-update-checker', 'github:someone-else/dsh-update-checker'),
+    command: ['dev/docs-check.mjs'],
+  },
 ];
 
 const run = (args, cwd) => {

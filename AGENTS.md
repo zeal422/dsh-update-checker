@@ -5,7 +5,12 @@
 - `index.js` runs in the Host. Two web routes, two agent tools, version detection, semver comparison.
 - `client.js` runs in the browser. The sidebar panel, the sidebar row icon, and the footer status. Its only import is `react` from the page module table.
 - `cordis.patch.yml` is the row the bundle inserts. Its `name` must match the package name.
-- `dev/` holds the checks and never ships. `render-check` renders the components, `docs-check` compares docs to code, `unit.test` covers semver, `red-check` proves the other checks catch broken code, `commit-msg` validates messages.
+- `dev/` holds the checks and never ships. `render-check` renders the components, `docs-check` compares docs to code, `style-check` keeps comments out, `unit.test` covers semver, `red-check` proves the other checks catch broken code, `release-guard` blocks hand edits to versions, `commit-msg` validates messages, `install-hooks` wires git hooks.
+- `.agents/skills/dsh-doc` is the DeepSeek Harness documentation skill, vendored from the installed harness. Read `.agents/skills/dsh-doc/SKILL.md` before touching slots, bundle patches, locale files, icons, or anything DSH-facing. It covers where the real docs and sources live, how a bundle patch composes, and the rules a client plugin must follow.
+
+## DSH facts come from the skill, not from memory
+
+The harness changes. Slot names, service methods, and bundle requirements are not guessable. Load the vendored skill, then read the installed documentation or query the live runtime. If a fact is not in the skill or the installed package, say it is unverified instead of inventing it.
 
 ## No comments in code
 
@@ -13,7 +18,7 @@
 
 ## Red first
 
-A check you have not seen fail is not a check. `npm run red` copies the repo, breaks it six ways, and requires the matching check to fail each time.
+A check you have not seen fail is not a check. `npm run red` copies the repo, breaks it eight ways, and requires the matching check to fail each time.
 
 When you add or change a check, add a mutation for it in `dev/red-check.mjs`. When you fix a bug, first make a check fail, then fix it. If nothing can fail, there is no test.
 
@@ -37,9 +42,11 @@ The tool does not judge your prefix. If you label a breaking change as `chore:`,
 
 ## Before committing
 
-Run `npm run check`. It runs ESLint, a docs check, and then renders every registered component against a stub host, so a missing variable fails here instead of leaving a blank panel.
+Run `npm run check`. It runs ESLint, the style check, the docs check, unit tests, and then renders every registered component against a stub host, so a missing variable fails here instead of leaving a blank panel.
 
-The docs check compares the docs against the code: agent tool names, web route paths, the bundle id, and the `files` list. When it fails, fix whichever side is wrong, not the check.
+`npm install` runs `dev/install-hooks.mjs` through the `prepare` script, so a fresh clone gets the hooks without anyone remembering a command.
+
+The docs check compares the docs against the code: agent tool names, web route paths, the bundle id, the `files` list, and the repository slug in the README. When it fails, fix whichever side is wrong, not the check.
 
 Commit only when the user asks.
 
