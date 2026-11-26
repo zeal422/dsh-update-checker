@@ -20,6 +20,7 @@ The harness changes. Slot names, service methods, and bundle requirements are no
 
 - Never say fixed, working, verified, or done unless you ran it and read the result. Quote the command and the output.
 - Never say "should work". Say "unverified" and name what is missing. A guess presented as a fact is the failure this section exists to prevent.
+- When something cannot be confirmed, exhaust every way to confirm it before assuming. Install the missing runtime, point the tool at a local stand-in, read the source, call the API. If it is still impossible, say exactly what blocked it, not that it probably works.
 - Read the actual error before changing anything. Reproduce the failure first. Do not edit config on a hunch, and do not fix the first plausible cause you find.
 - After changing CI or a workflow, read the run result and its annotations. A push is not evidence.
 - Separate verified by me, verified by the user, and not verified, every single time. Say which one it is.
