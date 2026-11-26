@@ -104,6 +104,27 @@ for (const file of ['README.md', 'AGENTS.md']) {
   }
 }
 
+const bannedPunctuation = /[\u2014\u2013\u2018\u2019\u201C\u201D]/;
+const prose = [];
+const skipDirs = new Set(['node_modules', '.git', 'dsh-doc']);
+const collect = (dir) => {
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      if (!skipDirs.has(entry.name)) collect(full);
+    } else if (entry.name.endsWith('.md')) {
+      const rel = path.relative(root, full).split(path.sep).join('/');
+      if (rel !== 'CHANGELOG.md') prose.push(rel);
+    }
+  }
+};
+collect(root);
+for (const file of prose) {
+  const lines = read(file).split('\n');
+  const line = lines.findIndex((text) => bannedPunctuation.test(text));
+  expect(line === -1, `${file}:${line + 1} has an em dash, an en dash, or a curly quote. Use a comma or a full stop.`);
+}
+
 if (failures.length > 0) {
   console.error('docs check failed:');
   for (const failure of failures) console.error(`  - ${failure}`);

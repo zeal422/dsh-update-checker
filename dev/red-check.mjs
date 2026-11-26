@@ -83,13 +83,25 @@ const mutations = [
   {
     name: 'the README miscounts the mutations',
     file: 'README.md',
-    apply: (text) => text.replace('breaks it fourteen ways', 'breaks it six ways'),
+    apply: (text) => text.replace(/breaks it [a-z]+ ways/, 'breaks it six ways'),
     command: ['dev/docs-check.mjs'],
   },
   {
     name: 'the README drops a step from the check chain',
     file: 'README.md',
     apply: (text) => text.replace('the CI check, ', ''),
+    command: ['dev/docs-check.mjs'],
+  },
+  {
+    name: 'the sync guard commits on a stale branch',
+    file: 'dev/sync-check.mjs',
+    apply: (text) => text.replace('const behind = Number(', 'const behind = 0; const unused = Number('),
+    command: ['--test', 'dev/sync.test.mjs'],
+  },
+  {
+    name: 'an em dash creeps into the docs',
+    file: 'README.md',
+    apply: (text) => text.replace('ESLint, the style check', 'ESLint \u2014 the style check'),
     command: ['dev/docs-check.mjs'],
   },
 ];
@@ -113,6 +125,10 @@ for (const mutation of mutations) {
       filter: (source) => !/[\\/](node_modules|\.git)$/.test(source),
     });
     const target = path.join(dir, mutation.file);
+    if (!fs.existsSync(target)) {
+      results.push({ name: mutation.name, caught: false, reason: `${mutation.file} is gone, the code moved` });
+      continue;
+    }
     const before = fs.readFileSync(target, 'utf8');
     const after = mutation.apply(before);
     if (after === before) {

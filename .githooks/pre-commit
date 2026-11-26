@@ -7,4 +7,5 @@ if [ ! -x node_modules/.bin/eslint ]; then
   exit 1
 fi
 
+node dev/sync-check.mjs
 npm run check --silent

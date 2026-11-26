@@ -30,7 +30,7 @@
     "hooks": "node dev/install-hooks.mjs",
     "lint": "eslint .",
     "style": "node dev/style-check.mjs",
-    "unit": "node --test dev/unit.test.mjs",
+    "unit": "node --test dev/unit.test.mjs dev/sync.test.mjs",
     "red": "node dev/red-check.mjs",
     "release": "semantic-release",
     "test": "node dev/render-check.mjs",

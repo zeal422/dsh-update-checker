@@ -5,7 +5,7 @@
 - `index.js` runs in the Host. Two web routes, two agent tools, version detection, semver comparison.
 - `client.js` runs in the browser. The sidebar panel, the sidebar row icon, and the footer status. Its only import is `react` from the page module table.
 - `cordis.patch.yml` is the row the bundle inserts. Its `name` must match the package name.
-- `dev/` holds the checks and never ships. `render-check` renders the components, `docs-check` compares docs to code, `style-check` keeps comments out, `ci-check` validates the release config and workflows, `unit.test` covers semver, `red-check` proves the other checks catch broken code, `release-guard` blocks hand edits to versions, `commit-msg` validates messages, `install-hooks` wires git hooks.
+- `dev/` holds the checks and never ships. `render-check` renders the components, `docs-check` compares docs to code and keeps punctuation clean, `style-check` keeps comments out, `ci-check` validates the release config and workflows, `sync-check` refuses a commit while the branch is behind its upstream, `unit.test` covers semver, `sync.test` covers the sync guard, `red-check` proves the other checks catch broken code, `release-guard` blocks hand edits to versions, `commit-msg` validates messages, `install-hooks` wires git hooks.
 - `.agents/skills/dsh-doc` is the DeepSeek Harness documentation skill, vendored from the installed harness. Read `.agents/skills/dsh-doc/SKILL.md` before touching slots, bundle patches, locale files, icons, or anything DSH-facing. It covers where the real docs and sources live, how a bundle patch composes, and the rules a client plugin must follow.
 
 ## DSH facts come from the skill, not from memory
@@ -15,6 +15,14 @@ The harness changes. Slot names, service methods, and bundle requirements are no
 ## No comments in code
 
 `index.js` and `client.js` carry no comments. They go stale and nothing checks them. Rationale belongs here or in the docs, and the code should read without narration.
+
+## Writing
+
+No em dashes. No en dashes standing in for them. No parentheses to dodge one. A comma or a full stop does the job. `dev/docs-check.mjs` fails on an em dash, an en dash, or a curly quote in hand-written markdown.
+
+Sentence case headings. Straight quotes. No bold label that restates the line under it. No "not just X but Y". Do not force three of anything. No "Great question", no "I hope this helps", no "Let me know if".
+
+Say what happened, who did it, and the number. Short sentences are fine, and so are long ones that earn their length. Hold an opinion when the facts support one. The `unslop` skill has the full list if it is installed.
 
 ## Claims
 
@@ -28,9 +36,30 @@ The harness changes. Slot names, service methods, and bundle requirements are no
 - When the user challenges a claim, answer with evidence or retract it. Never repeat a claim after contrary evidence has been shown.
 - If you catch yourself writing "probably", "should be fine", or "that was the issue", stop and run the check instead.
 
+## Sync before you judge the repo
+
+CI commits to the remote. Nothing pulls those commits into this clone. A checkout that has not fetched shows an old version and an old CHANGELOG, and calling that file stale is wrong. The file is fine. The clone is behind.
+
+Run this before any audit, doc claim, version claim, or commit:
+
+```sh
+git fetch origin
+git status -sb
+```
+
+If it says `behind`, rebase first:
+
+```sh
+git rebase --autostash @{u}
+```
+
+The `pre-commit` hook runs `dev/sync-check.mjs`, which fetches and refuses the commit while the branch is behind its upstream. When the branch has no upstream, or the fetch fails, it prints a skip line and lets the commit through.
+
+The remote is the truth. A local checkout that disagrees with it is out of date, not evidence.
+
 ## Red first
 
-A check you have not seen fail is not a check. `npm run red` copies the repo, breaks it fourteen ways, and requires the matching check to fail each time.
+A check you have not seen fail is not a check. `npm run red` copies the repo, breaks it sixteen ways, and requires the matching check to fail each time.
 
 When you add or change a check, add a mutation for it in `dev/red-check.mjs`. When you fix a bug, first make a check fail, then fix it. If nothing can fail, there is no test.
 
@@ -58,7 +87,7 @@ Run `npm run check`. It runs ESLint, the style check, the docs check, the CI che
 
 `npm install` runs `dev/install-hooks.mjs` through the `prepare` script, so a fresh clone gets the hooks without anyone remembering a command.
 
-The docs check compares the docs against the code: agent tool names, web route paths, the bundle id, the `files` list, the repository slug in the README, and the check steps and mutation count that this file and the README quote.
+The docs check compares the docs against the code: agent tool names, web route paths, the bundle id, the `files` list, the repository slug in the README, the check steps and mutation count that this file and the README quote, and em dashes or curly quotes in hand-written markdown.
 
 The CI check catches the two failures this repo already had: a release plugin or preset that is not installed, and a workflow node version that semantic-release rejects. It also requires `contents: write`, a `GITHUB_TOKEN`, `npm ci`, and the full check chain in the workflows.
 
@@ -100,6 +129,6 @@ One logical change per commit. No emoji. The `commit-msg` hook enforces this, an
 
 ## Hooks
 
-`npm run hooks` points git at `.githooks` for this clone. There are two: `commit-msg` checks the message, `pre-commit` runs `npm run check`.
+`npm run hooks` points git at `.githooks` for this clone. There are two: `commit-msg` checks the message, `pre-commit` runs `dev/sync-check.mjs` and then `npm run check`.
 
 There is no push hook. Blocking pushes got in the maintainer's way, so the no-push rule is on you alone. Do not push, and do not ask for a push hook back.
