@@ -84,4 +84,6 @@ One logical change per commit. No emoji. The `commit-msg` hook enforces this, an
 
 ## Hooks
 
-`npm run hooks` points git at `.githooks` for this clone. `pre-push` refuses unless `ALLOW_PUSH=1` is set.
+`npm run hooks` points git at `.githooks` for this clone. There are two: `commit-msg` checks the message, `pre-commit` runs `npm run check`.
+
+There is no push hook. Blocking pushes got in the maintainer's way, so the no-push rule is on you alone. Do not push, and do not ask for a push hook back.

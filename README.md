@@ -69,7 +69,7 @@ npm run check
 
 `npm run red` proves those checks are worth having. It copies the repo, breaks it six ways, and requires a check to fail each time. A mutation that survives is a hole in the tests.
 
-Run `npm install` once. Its `prepare` step points git at `.githooks` automatically, so the commit message check, the pre-commit checks, and the push guard are active without another command.
+Run `npm install` once. Its `prepare` step points git at `.githooks` automatically, so the commit message check and the pre-commit checks are active without another command.
 
 ## Versioning
 
