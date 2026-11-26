@@ -134,6 +134,18 @@ const mutations = [
     apply: (text) => text.replace(')?!?: ', ')?: '),
     command: ['dev/ci-check.mjs'],
   },
+  {
+    name: 'the lockfile version drifts from the package',
+    file: 'package-lock.json',
+    apply: (text) => text.replace('"version": "1.0.1"', '"version": "1.0.0"'),
+    command: ['dev/ci-check.mjs'],
+  },
+  {
+    name: 'the release commit leaves the lockfile behind',
+    file: 'release.config.js',
+    apply: (text) => text.replace("'CHANGELOG.md', 'package.json', 'package-lock.json'", "'CHANGELOG.md', 'package.json'"),
+    command: ['dev/ci-check.mjs'],
+  },
 ];
 
 const run = (args, cwd) => {

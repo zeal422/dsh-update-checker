@@ -96,6 +96,15 @@ if (subjectSource !== undefined) {
   expect(subjectPattern.test('feat!: add a widget'), 'dev/commit-msg.mjs rejects a feat!: subject, so a breaking change cannot be committed');
 }
 
+const packageVersion = JSON.parse(read('package.json')).version;
+const lock = JSON.parse(read('package-lock.json'));
+const lockVersions = [lock.version, lock.packages?.['']?.version].filter((value) => typeof value === 'string');
+expect(lockVersions.length > 0, 'package-lock.json records no version');
+for (const version of lockVersions) {
+  expect(version === packageVersion, `package-lock.json records ${version}, package.json records ${packageVersion}`);
+}
+expect((pluginOptions('@semantic-release/git').assets ?? []).includes('package-lock.json'), 'the release commit leaves package-lock.json behind, so its version drifts from package.json');
+
 const semanticReleaseEngines = JSON.parse(read('node_modules/semantic-release/package.json')).engines?.node;
 expect(typeof semanticReleaseEngines === 'string', 'semantic-release declares no node engine');
 const packageEngines = JSON.parse(read('package.json')).engines?.node;

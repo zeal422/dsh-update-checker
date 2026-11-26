@@ -65,15 +65,15 @@ npm install
 npm run check
 ```
 
-`check` runs, in order, ESLint, the style check, the docs check, the CI check, unit tests, and the render check. The render check loads the client bundle and renders every registered component against a stub host, so a missing variable fails there instead of leaving you with a blank panel. The docs check fails when a documented tool name or route no longer exists in the code, when the bundle id drifts from the package name, when the `files` list, the repository slug, or a README image stops matching, or when the step list and mutation count quoted in this README or AGENTS.md drift from the scripts, or when a hand-written doc carries an em dash or a curly quote. The CI check covers the release plugins, the workflow node version, and the workflow permissions.
+`check` runs, in order, ESLint, the style check, the docs check, the CI check, unit tests, and the render check. The render check loads the client bundle and renders every registered component against a stub host, so a missing variable fails there instead of leaving you with a blank panel. The docs check fails when a documented tool name or route no longer exists in the code, when the bundle id drifts from the package name, when the `files` list, the repository slug, or a README image stops matching, or when the step list and mutation count quoted in this README or AGENTS.md drift from the scripts, or when a hand-written doc carries an em dash or a curly quote. The CI check covers the release plugins, the workflow node version, the workflow permissions, and keeps the version in `package-lock.json` equal to `package.json`.
 
-`npm run red` proves those checks are worth having. It copies the repo, breaks it twenty-one ways, and requires a check to fail each time. A mutation that survives is a hole in the tests.
+`npm run red` proves those checks are worth having. It copies the repo, breaks it twenty-three ways, and requires a check to fail each time. A mutation that survives is a hole in the tests.
 
 Run `npm install` once. Its `prepare` step points git at `.githooks` automatically, so the commit message check and the pre-commit checks are active without another command. The pre-commit hook fetches first and refuses a commit while your branch is behind its upstream, so a release commit from CI cannot be missed.
 
 ## Versioning
 
-Releases are automatic. Every push to `main` produces one: semantic-release works out the version from the commits, writes the CHANGELOG entry, bumps `package.json`, commits `chore(release): x.y.z`, tags it, and publishes a GitHub release.
+Releases are automatic. Every push to `main` produces one: semantic-release works out the version from the commits, writes the CHANGELOG entry, bumps `package.json` and `package-lock.json`, commits `chore(release): x.y.z`, tags it, and publishes a GitHub release.
 
 - `feat:` bumps the minor number, the second one
 - every other prefix (`fix:`, `perf:`, `docs:`, `chore:`, `ci:`, `test:`, `build:`, `refactor:`) bumps the patch number, the third one

@@ -59,7 +59,7 @@ The remote is the truth. A local checkout that disagrees with it is out of date,
 
 ## Red first
 
-A check you have not seen fail is not a check. `npm run red` copies the repo, breaks it twenty-one ways, and requires the matching check to fail each time.
+A check you have not seen fail is not a check. `npm run red` copies the repo, breaks it twenty-three ways, and requires the matching check to fail each time.
 
 When you add or change a check, add a mutation for it in `dev/red-check.mjs`. When you fix a bug, first make a check fail, then fix it. If nothing can fail, there is no test.
 
@@ -74,7 +74,7 @@ When you add or change a check, add a mutation for it in `dev/red-check.mjs`. Wh
 
 ## Releases
 
-Pushing to `main` runs semantic-release. It reads the commits since the last tag, picks the version, writes the CHANGELOG entry, bumps `package.json`, commits `chore(release): x.y.z`, tags it, and publishes a GitHub release.
+Pushing to `main` runs semantic-release. It reads the commits since the last tag, picks the version, writes the CHANGELOG entry, bumps `package.json` and `package-lock.json`, commits `chore(release): x.y.z`, tags it, and publishes a GitHub release.
 
 - Every push releases. `feat:` bumps the minor number, the second one. Every other prefix bumps the patch number, the third one.
 - The major number stays at 1 until the maintainer says otherwise. No commit changes it.
@@ -92,7 +92,7 @@ Run `npm run check`. It runs ESLint, the style check, the docs check, the CI che
 
 The docs check compares the docs against the code: agent tool names, web route paths, the bundle id, the `files` list, the repository slug in the README, the check steps and mutation count that this file and the README quote, and em dashes or curly quotes in hand-written markdown.
 
-The CI check catches the two failures this repo already had: a release plugin or preset that is not installed, and a workflow node version that semantic-release rejects. It also requires `contents: write`, a `GITHUB_TOKEN`, `npm ci`, and the full check chain in the workflows. It enforces the version policy too: every prefix has a release rule, feat is minor, nothing bumps the major, and every type survives into the changelog.
+The CI check catches the two failures this repo already had: a release plugin or preset that is not installed, and a workflow node version that semantic-release rejects. It also requires `contents: write`, a `GITHUB_TOKEN`, `npm ci`, and the full check chain in the workflows. It enforces the version policy too: every prefix has a release rule, feat is minor, nothing bumps the major, every type survives into the changelog, and `package-lock.json` stays on the same version as `package.json`.
 
 When either check fails, fix whichever side is wrong, not the check.
 
