@@ -5,7 +5,7 @@
 - `index.js` runs in the Host. Two web routes, two agent tools, version detection, semver comparison.
 - `client.js` runs in the browser. The sidebar panel, the sidebar row icon, and the footer status. Its only import is `react` from the page module table.
 - `cordis.patch.yml` is the row the bundle inserts. Its `name` must match the package name.
-- `dev/` holds the checks and never ships. `render-check` renders the components, `docs-check` compares docs to code and keeps punctuation clean, `style-check` keeps comments out, `ci-check` validates the release config and workflows, `sync-check` refuses a commit while the branch is behind its upstream, `unit.test` covers semver, `sync.test` covers the sync guard, `red-check` proves the other checks catch broken code, `release-guard` blocks hand edits to versions, `commit-msg` validates messages, `install-hooks` wires git hooks.
+- `dev/` holds the checks and never ships. `render-check` renders the components, `docs-check` compares docs to code and keeps punctuation clean, `style-check` keeps comments out, `ci-check` validates the release config and workflows, `sync-check` refuses a commit while the branch is behind its upstream, `release-policy` holds the release rules and changelog sections, `unit.test` covers semver, `sync.test` covers the sync guard, `red-check` proves the other checks catch broken code, `release-guard` blocks hand edits to versions, `commit-msg` validates messages, `install-hooks` wires git hooks.
 - `.agents/skills/dsh-doc` is the DeepSeek Harness documentation skill, vendored from the installed harness. Read `.agents/skills/dsh-doc/SKILL.md` before touching slots, bundle patches, locale files, icons, or anything DSH-facing. It covers where the real docs and sources live, how a bundle patch composes, and the rules a client plugin must follow.
 
 ## DSH facts come from the skill, not from memory
@@ -59,7 +59,7 @@ The remote is the truth. A local checkout that disagrees with it is out of date,
 
 ## Red first
 
-A check you have not seen fail is not a check. `npm run red` copies the repo, breaks it sixteen ways, and requires the matching check to fail each time.
+A check you have not seen fail is not a check. `npm run red` copies the repo, breaks it twenty-one ways, and requires the matching check to fail each time.
 
 When you add or change a check, add a mutation for it in `dev/red-check.mjs`. When you fix a bug, first make a check fail, then fix it. If nothing can fail, there is no test.
 
@@ -76,10 +76,13 @@ When you add or change a check, add a mutation for it in `dev/red-check.mjs`. Wh
 
 Pushing to `main` runs semantic-release. It reads the commits since the last tag, picks the version, writes the CHANGELOG entry, bumps `package.json`, commits `chore(release): x.y.z`, tags it, and publishes a GitHub release.
 
-- `fix:` bumps patch. `feat:` bumps minor. A `!` after the type, or a `BREAKING CHANGE:` footer, bumps major. Everything else rides along into the next release.
-- Nothing is released when a push contains only `chore:`, `docs:`, `test:`, `ci:`, `build:`, or `refactor:` commits.
+- Every push releases. `feat:` bumps the minor number, the second one. Every other prefix bumps the patch number, the third one.
+- The major number stays at 1 until the maintainer says otherwise. No commit changes it.
+- A `!` after the type, or a `BREAKING CHANGE:` footer, releases as a minor and lands under BREAKING CHANGES. It never bumps the major.
+- One push produces one version, not one version per commit.
+- The changelog and the release notes list every type, including docs and chores.
 
-The tool does not judge your prefix. If you label a breaking change as `chore:`, it ships as no release at all, or worse, a patch. Label what a user would notice, not how much code you moved.
+The tool does not judge your prefix. If you label a breaking change as `chore:`, it ships as a patch and reads like a chore. Label what a user would notice, not how much code you moved.
 
 ## Before committing
 
@@ -89,7 +92,7 @@ Run `npm run check`. It runs ESLint, the style check, the docs check, the CI che
 
 The docs check compares the docs against the code: agent tool names, web route paths, the bundle id, the `files` list, the repository slug in the README, the check steps and mutation count that this file and the README quote, and em dashes or curly quotes in hand-written markdown.
 
-The CI check catches the two failures this repo already had: a release plugin or preset that is not installed, and a workflow node version that semantic-release rejects. It also requires `contents: write`, a `GITHUB_TOKEN`, `npm ci`, and the full check chain in the workflows.
+The CI check catches the two failures this repo already had: a release plugin or preset that is not installed, and a workflow node version that semantic-release rejects. It also requires `contents: write`, a `GITHUB_TOKEN`, `npm ci`, and the full check chain in the workflows. It enforces the version policy too: every prefix has a release rule, feat is minor, nothing bumps the major, and every type survives into the changelog.
 
 When either check fails, fix whichever side is wrong, not the check.
 

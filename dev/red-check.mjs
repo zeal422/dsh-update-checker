@@ -71,7 +71,7 @@ const mutations = [
   {
     name: 'the release config asks for a preset that is not installed',
     file: 'release.config.js',
-    apply: (text) => text.replace("    '@semantic-release/commit-analyzer',", "    ['@semantic-release/commit-analyzer', { preset: 'conventionalcommits' }],"),
+    apply: (text) => text.replace('{ releaseRules, parserOpts: { breakingHeaderPattern } }', "{ releaseRules, preset: 'conventionalcommits', parserOpts: { breakingHeaderPattern } }"),
     command: ['dev/ci-check.mjs'],
   },
   {
@@ -83,7 +83,7 @@ const mutations = [
   {
     name: 'the README miscounts the mutations',
     file: 'README.md',
-    apply: (text) => text.replace(/breaks it [a-z]+ ways/, 'breaks it six ways'),
+    apply: (text) => text.replace(/breaks it [a-z-]+ ways/, 'breaks it six ways'),
     command: ['dev/docs-check.mjs'],
   },
   {
@@ -103,6 +103,36 @@ const mutations = [
     file: 'README.md',
     apply: (text) => text.replace('ESLint, the style check', 'ESLint \u2014 the style check'),
     command: ['dev/docs-check.mjs'],
+  },
+  {
+    name: 'a commit type stops producing a release',
+    file: 'dev/release-policy.mjs',
+    apply: (text) => text.replace("  { type: 'docs', release: 'patch' },\n", ''),
+    command: ['dev/ci-check.mjs'],
+  },
+  {
+    name: 'a release rule is allowed to bump the major',
+    file: 'dev/release-policy.mjs',
+    apply: (text) => text.replace("{ type: 'fix', release: 'patch' }", "{ type: 'fix', release: 'major' }"),
+    command: ['dev/ci-check.mjs'],
+  },
+  {
+    name: 'the changelog drops a commit type',
+    file: 'dev/release-policy.mjs',
+    apply: (text) => text.replace("  docs: 'Documentation',\n", ''),
+    command: ['dev/ci-check.mjs'],
+  },
+  {
+    name: 'a bang in the subject stops being parsed',
+    file: 'release.config.js',
+    apply: (text) => text.replace('{ releaseRules, parserOpts: { breakingHeaderPattern } }', '{ releaseRules }'),
+    command: ['dev/ci-check.mjs'],
+  },
+  {
+    name: 'the commit hook rejects a bang subject',
+    file: 'dev/commit-msg.mjs',
+    apply: (text) => text.replace(')?!?: ', ')?: '),
+    command: ['dev/ci-check.mjs'],
   },
 ];
 
@@ -124,6 +154,7 @@ for (const mutation of mutations) {
       recursive: true,
       filter: (source) => !/[\\/](node_modules|\.git)$/.test(source),
     });
+    fs.symlinkSync(path.join(repoRoot, 'node_modules'), path.join(dir, 'node_modules'), 'dir');
     const target = path.join(dir, mutation.file);
     if (!fs.existsSync(target)) {
       results.push({ name: mutation.name, caught: false, reason: `${mutation.file} is gone, the code moved` });

@@ -1,8 +1,10 @@
+import { breakingHeaderPattern, notesTransform, releaseRules } from './dev/release-policy.mjs';
+
 export default {
   branches: ['main'],
   plugins: [
-    '@semantic-release/commit-analyzer',
-    '@semantic-release/release-notes-generator',
+    ['@semantic-release/commit-analyzer', { releaseRules, parserOpts: { breakingHeaderPattern } }],
+    ['@semantic-release/release-notes-generator', { writerOpts: { transform: notesTransform }, parserOpts: { breakingHeaderPattern } }],
     ['@semantic-release/npm', { npmPublish: false }],
     ['@semantic-release/changelog', { changelogFile: 'CHANGELOG.md' }],
     [

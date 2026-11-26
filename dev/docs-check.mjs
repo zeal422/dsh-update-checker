@@ -93,11 +93,19 @@ for (const step of checkSteps) {
 }
 
 const mutationCount = [...read('dev/red-check.mjs').matchAll(/^    name: '/gm)].length;
-const numberWords = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty'];
-const countWord = numberWords[mutationCount];
-expect(countWord !== undefined, `dev/red-check.mjs has ${mutationCount} mutations, and dev/docs-check.mjs only spells numbers up to twenty`);
+const units = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
+const teens = ['ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+const tens = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+const numberWord = (value) => {
+  if (value < 10) return units[value];
+  if (value < 20) return teens[value - 10];
+  if (value < 100) return value % 10 === 0 ? tens[Math.floor(value / 10)] : `${tens[Math.floor(value / 10)]}-${units[value % 10]}`;
+  return undefined;
+};
+const countWord = numberWord(mutationCount);
+expect(countWord !== undefined, `dev/red-check.mjs has ${mutationCount} mutations, and dev/docs-check.mjs only spells numbers up to ninety-nine`);
 for (const file of ['README.md', 'AGENTS.md']) {
-  const claim = docs[file].match(/breaks it ([a-z]+) ways/);
+  const claim = docs[file].match(/breaks it ([a-z-]+) ways/);
   expect(claim !== null, `${file} does not say how many ways the red check breaks the repo`);
   if (claim !== null) {
     expect(claim[1] === countWord, `${file} says the red check breaks the repo ${claim[1]} ways, dev/red-check.mjs has ${mutationCount}`);

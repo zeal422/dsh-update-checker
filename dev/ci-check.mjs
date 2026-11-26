@@ -55,6 +55,47 @@ for (const entry of plugins) {
   }
 }
 
+const pluginOptions = (name) => {
+  const entry = plugins.find((candidate) => (Array.isArray(candidate) ? candidate[0] : candidate) === name);
+  return Array.isArray(entry) ? (entry[1] ?? {}) : {};
+};
+
+const releaseRules = pluginOptions('@semantic-release/commit-analyzer').releaseRules;
+expect(Array.isArray(releaseRules) && releaseRules.length > 0, 'commit-analyzer has no releaseRules, so semantic-release falls back to its own version policy');
+for (const rule of releaseRules ?? []) {
+  expect(rule.release === 'minor' || rule.release === 'patch', `release rule ${JSON.stringify(rule)} bumps the major number`);
+}
+expect((releaseRules ?? []).some((rule) => rule.breaking === true && rule.release === 'minor'), 'a breaking marker must release as a minor, never as a major');
+expect((releaseRules ?? []).some((rule) => rule.type === 'feat' && rule.release === 'minor'), 'feat must bump the minor number');
+
+const prefixes = (read('dev/commit-msg.mjs').match(/const PREFIX = \/\^\(([a-z|]+)\)/) ?? [])[1]?.split('|') ?? [];
+expect(prefixes.length > 0, 'dev/ci-check.mjs cannot read the commit prefixes from dev/commit-msg.mjs');
+for (const prefix of prefixes) {
+  expect((releaseRules ?? []).some((rule) => rule.type === prefix), `dev/commit-msg.mjs accepts ${prefix}:, and no release rule covers it`);
+}
+
+const notesTransform = pluginOptions('@semantic-release/release-notes-generator').writerOpts?.transform;
+expect(typeof notesTransform === 'function', 'release-notes-generator has no transform, so small changes stay out of the changelog');
+if (typeof notesTransform === 'function') {
+  for (const prefix of prefixes) {
+    const entry = notesTransform({ type: prefix, hash: '0123456789abcdef', subject: 'subject', scope: null, notes: [], references: [] });
+    expect(entry !== null && typeof entry.type === 'string', `the changelog drops ${prefix}: commits`);
+  }
+  const breaking = notesTransform({ type: 'fix', hash: '0123456789abcdef', subject: 'subject', scope: null, notes: [{ text: 'breaks' }], references: [] });
+  expect(breaking?.notes?.[0]?.title === 'BREAKING CHANGES', 'the changelog drops BREAKING CHANGES notes');
+}
+
+expect(pluginOptions('@semantic-release/commit-analyzer').parserOpts?.breakingHeaderPattern instanceof RegExp, 'commit-analyzer does not parse a ! in the subject, so such a commit releases nothing');
+expect(pluginOptions('@semantic-release/release-notes-generator').parserOpts?.breakingHeaderPattern instanceof RegExp, 'release-notes-generator does not parse a ! in the subject, so the note drops out of the changelog');
+
+const subjectSource = (read('dev/commit-msg.mjs').match(/const PREFIX = \/(.+)\/;/) ?? [])[1];
+expect(subjectSource !== undefined, 'dev/ci-check.mjs cannot read the subject pattern from dev/commit-msg.mjs');
+if (subjectSource !== undefined) {
+  const subjectPattern = new RegExp(subjectSource);
+  expect(subjectPattern.test('feat: add a widget'), 'dev/commit-msg.mjs rejects a plain feat: subject');
+  expect(subjectPattern.test('feat!: add a widget'), 'dev/commit-msg.mjs rejects a feat!: subject, so a breaking change cannot be committed');
+}
+
 const semanticReleaseEngines = JSON.parse(read('node_modules/semantic-release/package.json')).engines?.node;
 expect(typeof semanticReleaseEngines === 'string', 'semantic-release declares no node engine');
 const packageEngines = JSON.parse(read('package.json')).engines?.node;

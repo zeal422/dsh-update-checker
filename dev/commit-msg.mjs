@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 import { execFileSync } from 'node:child_process';
 
-const PREFIX = /^(feat|fix|docs|chore|refactor|test|perf|build|ci)(\([a-z0-9-]+\))?: \S/;
+const PREFIX = /^(feat|fix|docs|chore|refactor|test|perf|build|ci)(\([a-z0-9-]+\))?!?: \S/;
 const EXEMPT = /^(Merge |Revert |Initial commit|chore\(release\):)/;
 const MAX_SUBJECT = 72;
 

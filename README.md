@@ -67,24 +67,22 @@ npm run check
 
 `check` runs, in order, ESLint, the style check, the docs check, the CI check, unit tests, and the render check. The render check loads the client bundle and renders every registered component against a stub host, so a missing variable fails there instead of leaving you with a blank panel. The docs check fails when a documented tool name or route no longer exists in the code, when the bundle id drifts from the package name, when the `files` list, the repository slug, or a README image stops matching, or when the step list and mutation count quoted in this README or AGENTS.md drift from the scripts, or when a hand-written doc carries an em dash or a curly quote. The CI check covers the release plugins, the workflow node version, and the workflow permissions.
 
-`npm run red` proves those checks are worth having. It copies the repo, breaks it sixteen ways, and requires a check to fail each time. A mutation that survives is a hole in the tests.
+`npm run red` proves those checks are worth having. It copies the repo, breaks it twenty-one ways, and requires a check to fail each time. A mutation that survives is a hole in the tests.
 
 Run `npm install` once. Its `prepare` step points git at `.githooks` automatically, so the commit message check and the pre-commit checks are active without another command. The pre-commit hook fetches first and refuses a commit while your branch is behind its upstream, so a release commit from CI cannot be missed.
 
 ## Versioning
 
-Releases are automatic. Push to `main` and semantic-release works out the version from the commits, writes the CHANGELOG entry, bumps `package.json`, commits `chore(release): x.y.z`, tags it, and publishes a GitHub release.
+Releases are automatic. Every push to `main` produces one: semantic-release works out the version from the commits, writes the CHANGELOG entry, bumps `package.json`, commits `chore(release): x.y.z`, tags it, and publishes a GitHub release.
 
-- `fix:` bumps patch
-- `feat:` bumps minor
-- `!` after the type, or a `BREAKING CHANGE:` footer, bumps major
-- `chore:`, `docs:`, `test:`, `ci:`, `build:`, `refactor:` release nothing on their own
+- `feat:` bumps the minor number, the second one
+- every other prefix (`fix:`, `perf:`, `docs:`, `chore:`, `ci:`, `test:`, `build:`, `refactor:`) bumps the patch number, the third one
+- the major number stays at 1 until the maintainer says so
+- a `!` after the type, or a `BREAKING CHANGE:` footer, releases as a minor and lands under BREAKING CHANGES, never as a major
 
-Several commits land in one release. A push containing only internal work releases nothing at all. Nobody edits the version by hand, and the changelog is generated rather than maintained.
+One push produces one version, not one per commit. The changelog and the release notes list every type, so a docs-only push still gets an entry under Documentation.
 
-The changelog is grouped by commit type, so a minor release lists its features and a patch release lists its fixes. The size of the number tells you the size of the change: a patch is a small repair, a minor adds behavior, a major breaks something that worked before.
-
-The catch is that the prefix is a claim. A breaking change labelled `chore:` ships as no release. Label what a user would notice.
+Nobody edits the version by hand, and the changelog is generated rather than maintained. The prefix is a claim: the version follows it, not the diff.
 
 ## Commit messages
 
