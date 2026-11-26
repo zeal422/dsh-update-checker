@@ -1,6 +1,4 @@
-# Changelog
-
-## [1.0.0](https://github.com/zeal422/dsh-update-checker/releases/tag/v1.0.0) (2026-11-25)
+# [1.0.0](https://github.com/zeal422/dsh-update-checker/releases/tag/v1.0.0) (2026-11-25)
 
 ### Features
 
