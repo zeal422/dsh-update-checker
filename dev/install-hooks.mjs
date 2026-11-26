@@ -6,6 +6,11 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 
+if (process.env.CI) {
+  console.log('hooks: CI run, skipping');
+  process.exit(0);
+}
+
 if (!fs.existsSync(path.join(root, '.git'))) {
   console.log('hooks: not a git checkout, skipping');
   process.exit(0);
