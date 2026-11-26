@@ -69,6 +69,41 @@ for (const match of docs['README.md'].matchAll(/!\[[^\]]*\]\(([^)]+)\)/g)) {
   expect(fs.existsSync(path.join(root, target)), `README.md references a missing image: ${target}`);
 }
 
+const stepLabels = {
+  lint: 'ESLint',
+  style: 'the style check',
+  'dev/docs-check.mjs': 'the docs check',
+  'dev/ci-check.mjs': 'the CI check',
+  unit: 'unit tests',
+  test: 'the render check',
+};
+const checkSteps = String(pkg.scripts.check)
+  .split('&&')
+  .map((step) => step.trim().replace(/^npm (?:run\s+)?/, '').replace(/^node\s+(dev\/[a-z-]+\.mjs)$/, '$1'))
+  .filter(Boolean);
+const chainMatch = docs['README.md'].match(/`check` runs([^.]*)\./);
+expect(chainMatch !== null, 'README.md does not describe what `check` runs');
+const chain = chainMatch === null ? '' : chainMatch[1];
+for (const step of checkSteps) {
+  const label = stepLabels[step];
+  expect(label !== undefined, `package.json "check" runs ${step}, and dev/docs-check.mjs has no README label for it`);
+  if (label !== undefined) {
+    expect(chain.includes(label), `README.md does not name the ${step} step of npm run check`);
+  }
+}
+
+const mutationCount = [...read('dev/red-check.mjs').matchAll(/^    name: '/gm)].length;
+const numberWords = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty'];
+const countWord = numberWords[mutationCount];
+expect(countWord !== undefined, `dev/red-check.mjs has ${mutationCount} mutations, and dev/docs-check.mjs only spells numbers up to twenty`);
+for (const file of ['README.md', 'AGENTS.md']) {
+  const claim = docs[file].match(/breaks it ([a-z]+) ways/);
+  expect(claim !== null, `${file} does not say how many ways the red check breaks the repo`);
+  if (claim !== null) {
+    expect(claim[1] === countWord, `${file} says the red check breaks the repo ${claim[1]} ways, dev/red-check.mjs has ${mutationCount}`);
+  }
+}
+
 if (failures.length > 0) {
   console.error('docs check failed:');
   for (const failure of failures) console.error(`  - ${failure}`);

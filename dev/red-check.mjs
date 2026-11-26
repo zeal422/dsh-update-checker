@@ -80,6 +80,18 @@ const mutations = [
     apply: (text) => text.replace('contents: write', 'contents: read'),
     command: ['dev/ci-check.mjs'],
   },
+  {
+    name: 'the README miscounts the mutations',
+    file: 'README.md',
+    apply: (text) => text.replace('breaks it fourteen ways', 'breaks it six ways'),
+    command: ['dev/docs-check.mjs'],
+  },
+  {
+    name: 'the README drops a step from the check chain',
+    file: 'README.md',
+    apply: (text) => text.replace('the CI check, ', ''),
+    command: ['dev/docs-check.mjs'],
+  },
 ];
 
 const run = (args, cwd) => {

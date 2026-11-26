@@ -8,10 +8,10 @@ It teaches an agent how to look up DeepSeek Harness facts instead of guessing: s
 
 Why it is vendored rather than referenced: the source lives inside the installed harness, and its path changes with every DSH upgrade. An agent working on this repo should not have to find it.
 
-Refresh it with the harness, not by hand:
+Refresh it from the installed harness, not by hand:
 
 ```sh
-cp -R "$(dirname "$(node -p "require.resolve('@deepseek-ai/dsh-agent-preset/package.json')")")/skills/dsh-doc/." .agents/skills/dsh-doc/
+cp -R "$(npm root -g)/@deepseek-ai/dsh/node_modules/@deepseek-ai/dsh-agent-preset/skills/dsh-doc/." .agents/skills/dsh-doc/
 ```
 
-If that path no longer resolves, the layout changed. Read the installed package before copying.
+That path assumes a global npm install. If it does not resolve, the harness was installed another way. Find the installed `@deepseek-ai/dsh-agent-preset` and read it before copying.

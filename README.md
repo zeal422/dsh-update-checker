@@ -65,9 +65,9 @@ npm install
 npm run check
 ```
 
-`check` runs ESLint, the docs check, unit tests, and then the render check. The render check loads the client bundle and renders every registered component against a stub host, so a missing variable fails there instead of leaving you with a blank panel. The docs check fails when a documented tool name or route no longer exists in the code, or when the bundle id drifts from the package name.
+`check` runs, in order, ESLint, the style check, the docs check, the CI check, unit tests, and the render check. The render check loads the client bundle and renders every registered component against a stub host, so a missing variable fails there instead of leaving you with a blank panel. The docs check fails when a documented tool name or route no longer exists in the code, when the bundle id drifts from the package name, when the `files` list, the repository slug, or a README image stops matching, or when the step list and mutation count quoted in this README or AGENTS.md drift from the scripts. The CI check covers the release plugins, the workflow node version, and the workflow permissions.
 
-`npm run red` proves those checks are worth having. It copies the repo, breaks it six ways, and requires a check to fail each time. A mutation that survives is a hole in the tests.
+`npm run red` proves those checks are worth having. It copies the repo, breaks it fourteen ways, and requires a check to fail each time. A mutation that survives is a hole in the tests.
 
 Run `npm install` once. Its `prepare` step points git at `.githooks` automatically, so the commit message check and the pre-commit checks are active without another command.
 

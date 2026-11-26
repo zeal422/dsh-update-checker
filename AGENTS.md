@@ -30,7 +30,7 @@ The harness changes. Slot names, service methods, and bundle requirements are no
 
 ## Red first
 
-A check you have not seen fail is not a check. `npm run red` copies the repo, breaks it twelve ways, and requires the matching check to fail each time.
+A check you have not seen fail is not a check. `npm run red` copies the repo, breaks it fourteen ways, and requires the matching check to fail each time.
 
 When you add or change a check, add a mutation for it in `dev/red-check.mjs`. When you fix a bug, first make a check fail, then fix it. If nothing can fail, there is no test.
 
@@ -58,7 +58,7 @@ Run `npm run check`. It runs ESLint, the style check, the docs check, the CI che
 
 `npm install` runs `dev/install-hooks.mjs` through the `prepare` script, so a fresh clone gets the hooks without anyone remembering a command.
 
-The docs check compares the docs against the code: agent tool names, web route paths, the bundle id, the `files` list, and the repository slug in the README.
+The docs check compares the docs against the code: agent tool names, web route paths, the bundle id, the `files` list, the repository slug in the README, and the check steps and mutation count that this file and the README quote.
 
 The CI check catches the two failures this repo already had: a release plugin or preset that is not installed, and a workflow node version that semantic-release rejects. It also requires `contents: write`, a `GITHUB_TOKEN`, `npm ci`, and the full check chain in the workflows.
 
