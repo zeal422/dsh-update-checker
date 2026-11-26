@@ -28,6 +28,17 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Ensure v1.0.0 has a release
+        run: |
+          if gh release view v1.0.0 >/dev/null 2>&1; then
+            echo "v1.0.0 already has a release"
+          else
+            gh release create v1.0.0 \
+              --title "dsh-update-checker - v1.0.0" \
+              --notes-file .github/release-v1.0.0.md
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Release
         run: |
           set +e
