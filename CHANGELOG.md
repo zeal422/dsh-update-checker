@@ -1,3 +1,26 @@
+## [1.0.2](https://github.com/zeal422/dsh-update-checker/compare/v1.0.1...v1.0.2) (2026-11-26)
+
+
+### Bug Fixes
+
+* keep the lockfile version in step with package.json ([9bb46e3](https://github.com/zeal422/dsh-update-checker/commit/9bb46e3d2c6ca6473af9f3e273f19c3a8ae3d08c))
+
+
+### Chores
+
+* block commits on a stale branch and ban dash punctuation ([056079c](https://github.com/zeal422/dsh-update-checker/commit/056079c3b82dab3b0d7d20cc2c1e4c39ad92d3f8))
+* enforce the release pipeline invariants in CI ([acca3c5](https://github.com/zeal422/dsh-update-checker/commit/acca3c54f2b6e2b16b1200554d3e17936447c222))
+
+
+### Continuous Integration
+
+* release every push with a frozen major number ([0722020](https://github.com/zeal422/dsh-update-checker/commit/0722020cd277bd237face9b0ace0e255fa449902))
+
+
+### Documentation
+
+* match the docs to the checks they describe ([9bfd107](https://github.com/zeal422/dsh-update-checker/commit/9bfd107581fab79ad0e975560c43891e6ddd8e44))
+
 ## [1.0.1](https://github.com/zeal422/dsh-update-checker/compare/v1.0.0...v1.0.1) (2026-11-26)
 
 

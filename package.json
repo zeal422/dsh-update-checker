@@ -1,6 +1,6 @@
 {
   "name": "@local/dsh-update-checker",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "description": "Sidebar update checker for DeepSeek Harness: shows the newest npm release and upgrades with one click.",
   "type": "module",
