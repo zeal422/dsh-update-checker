@@ -62,6 +62,24 @@ const mutations = [
     apply: (text) => text.replace('docs/before-sidebar.png', 'docs/before-sidebar-missing.png'),
     command: ['dev/docs-check.mjs'],
   },
+  {
+    name: 'the release job drops to an unsupported node',
+    file: '.github/workflows/release.yml',
+    apply: (text) => text.replace('node-version: 22', 'node-version: 20'),
+    command: ['dev/ci-check.mjs'],
+  },
+  {
+    name: 'the release config asks for a preset that is not installed',
+    file: 'release.config.js',
+    apply: (text) => text.replace("    '@semantic-release/commit-analyzer',", "    ['@semantic-release/commit-analyzer', { preset: 'conventionalcommits' }],"),
+    command: ['dev/ci-check.mjs'],
+  },
+  {
+    name: 'the release job loses write permission',
+    file: '.github/workflows/release.yml',
+    apply: (text) => text.replace('contents: write', 'contents: read'),
+    command: ['dev/ci-check.mjs'],
+  },
 ];
 
 const run = (args, cwd) => {
