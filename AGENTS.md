@@ -16,6 +16,17 @@ The harness changes. Slot names, service methods, and bundle requirements are no
 
 `index.js` and `client.js` carry no comments. They go stale and nothing checks them. Rationale belongs here or in the docs, and the code should read without narration.
 
+## Claims
+
+- Never say fixed, working, verified, or done unless you ran it and read the result. Quote the command and the output.
+- Never say "should work". Say "unverified" and name what is missing. A guess presented as a fact is the failure this section exists to prevent.
+- Read the actual error before changing anything. Reproduce the failure first. Do not edit config on a hunch, and do not fix the first plausible cause you find.
+- After changing CI or a workflow, read the run result and its annotations. A push is not evidence.
+- Separate verified by me, verified by the user, and not verified, every single time. Say which one it is.
+- The render harness proves a component does not crash. It does not prove it looks right. Never claim how something looks without a screenshot.
+- When the user challenges a claim, answer with evidence or retract it. Never repeat a claim after contrary evidence has been shown.
+- If you catch yourself writing "probably", "should be fine", or "that was the issue", stop and run the check instead.
+
 ## Red first
 
 A check you have not seen fail is not a check. `npm run red` copies the repo, breaks it nine ways, and requires the matching check to fail each time.
