@@ -1,3 +1,11 @@
+## [1.0.1](https://github.com/zeal422/dsh-update-checker/compare/v1.0.0...v1.0.1) (2026-11-26)
+
+
+### Bug Fixes
+
+* make the release pipeline actually run ([0fab2fe](https://github.com/zeal422/dsh-update-checker/commit/0fab2fee9ee6518bcfb2c15c87db401029a4cefa))
+* use the presets semantic-release ships ([0c9a796](https://github.com/zeal422/dsh-update-checker/commit/0c9a796d40dd69179963fc59e88e4102715f804d))
+
 # [1.0.0](https://github.com/zeal422/dsh-update-checker/releases/tag/v1.0.0) (2026-11-25)
 
 ### Features
